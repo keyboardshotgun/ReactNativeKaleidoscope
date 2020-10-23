@@ -1,3 +1,5 @@
 # ReactNativeKaleidoscope
-react-native, typescript, Animated v2
-wcandillon, You are the best.
+
+🎪 React-Native + Typescript + React-Native-Animatedv2 playgournd 🎠
+
+👍 wcandillon, You are the best 👍
