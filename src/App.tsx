@@ -16,7 +16,7 @@ const AppRoot = () => {
         name={'MainScreen'}
         component={MainScreen}
         options={{
-          title: 'MainScreen',
+          title: 'Random Box',
         }}
       />
       <Stack.Screen

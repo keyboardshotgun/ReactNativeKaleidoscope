@@ -11,6 +11,16 @@ const StyleGuide = {
     height: DEVICE_HEIGHT,
     backgroundColor: '#333333',
   },
+  pinkButton : {
+     position:'absolute'
+    ,left: DEVICE_WIDTH / 2 - 40
+    ,top: DEVICE_HEIGHT - 200
+    ,backgroundColor:'#FF55FF'
+    ,width:80,height:30
+    ,borderRadius:15
+    ,justifyContent: 'center'
+    ,alignItems: 'center'
+  },
   mainTop: {
     flex: 0.92,
     backgroundColor: '#c85959',
@@ -26,7 +36,7 @@ const StyleGuide = {
     alignItems: 'center',
   },
   whiteFont : {fontSize: 16, color: '#DDDDDD'},
-  movingBox : {width:150,height:150,backgroundColor:'#333333',justifyContent: 'center',alignItems: 'center'},
+  movingBox : {width:150,height:150,backgroundColor:'#333333',justifyContent: 'center',alignItems: 'center',left:120,top:100},
   spacing: 8,
   palette: {
     primary: '#3884ff',
