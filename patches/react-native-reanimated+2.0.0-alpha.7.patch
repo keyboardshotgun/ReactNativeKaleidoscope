@@ -1,0 +1,658 @@
+diff --git a/node_modules/react-native-reanimated/plugin.js b/node_modules/react-native-reanimated/plugin.js
+index 0ac2c44..2ee0f3b 100644
+--- a/node_modules/react-native-reanimated/plugin.js
++++ b/node_modules/react-native-reanimated/plugin.js
+@@ -1,115 +1,133 @@
+-'use strict';
++"use strict";
++
++function _defineProperty(obj, key, value) {
++  if (key in obj) {
++    Object.defineProperty(obj, key, {
++      value: value,
++      enumerable: true,
++      configurable: true,
++      writable: true,
++    });
++  } else {
++    obj[key] = value;
++  }
++  return obj;
++}
++
++const generate = require("@babel/generator").default;
++
++const hash = require("string-hash-64");
++
++const { visitors } = require("@babel/traverse");
+ 
+-const generate = require('@babel/generator').default;
+-const hash = require('string-hash-64');
+-const { visitors } = require('@babel/traverse');
+-const traverse = require('@babel/traverse').default;
+-const parse = require('@babel/parser').parse;
++const traverse = require("@babel/traverse").default;
+ 
++const parse = require("@babel/parser").parse;
+ /**
+  * holds a map of hooks names as keys and array of argument indexes which are worklets(starting from 0)
+  */
++
+ const functionHooks = new Map([
+-  ['useAnimatedStyle', [0]],
+-  ['useAnimatedProps', [0]],
+-  ['useDerivedValue', [0]],
+-  ['useAnimatedScrollHandler', [0]],
+-  ['useAnimatedReaction', [0, 1]],
++  ["useAnimatedStyle", [0]],
++  ["useAnimatedProps", [0]],
++  ["useDerivedValue", [0]],
++  ["useAnimatedScrollHandler", [0]],
++  ["useAnimatedReaction", [0, 1]],
+ ]);
+-
+ const objectHooks = new Set([
+-  'useAnimatedGestureHandler',
+-  'useAnimatedScrollHandler',
++  "useAnimatedGestureHandler",
++  "useAnimatedScrollHandler",
+ ]);
+-
+ const globals = new Set([
+-  'this',
+-  'Date',
+-  'Array',
+-  'ArrayBuffer',
+-  'Date',
+-  'HermesInternal',
+-  'JSON',
+-  'Math',
+-  'Number',
+-  'Object',
+-  'String',
+-  'undefined',
+-  'null',
+-  'UIManager',
+-  'requestAnimationFrame',
+-  '_WORKLET',
+-  'arguments',
+-  'Map',
+-  'Set',
+-  '_log',
+-  '_updateProps',
+-  'RegExp',
+-  'Error',
+-  'global',
+-  '_measure',
+-  '_scrollTo',
+-]);
++  "this",
++  "Date",
++  "Array",
++  "ArrayBuffer",
++  "Date",
++  "HermesInternal",
++  "JSON",
++  "Math",
++  "Number",
++  "Object",
++  "String",
++  "undefined",
++  "null",
++  "UIManager",
++  "requestAnimationFrame",
++  "_WORKLET",
++  "arguments",
++  "Map",
++  "Set",
++  "_log",
++  "_updateProps",
++  "RegExp",
++  "Error",
++  "global",
++  "_measure",
++  "_scrollTo",
++]); // leaving way to avoid deep capturing by adding 'stopCapturing' to the blacklist
+ 
+-// leaving way to avoid deep capturing by adding 'stopCapturing' to the blacklist
+ const blacklistedFunctions = new Set([
+-  'stopCapturing',
+-  'toString',
+-  'map',
+-  'filter',
+-  'forEach',
+-  'valueOf',
+-  'toPrecision',
+-  'toExponential',
+-  'constructor',
+-  'toFixed',
+-  'toLocaleString',
+-  'toSource',
+-  'charAt',
+-  'charCodeAt',
+-  'concat',
+-  'indexOf',
+-  'lastIndexOf',
+-  'localeCompare',
+-  'length',
+-  'match',
+-  'replace',
+-  'search',
+-  'slice',
+-  'split',
+-  'substr',
+-  'substring',
+-  'toLocaleLowerCase',
+-  'toLocaleUpperCase',
+-  'toLowerCase',
+-  'toUpperCase',
+-  'every',
+-  'join',
+-  'pop',
+-  'push',
+-  'reduce',
+-  'reduceRight',
+-  'reverse',
+-  'shift',
+-  'slice',
+-  'some',
+-  'sort',
+-  'splice',
+-  'unshift',
+-  'hasOwnProperty',
+-  'isPrototypeOf',
+-  'propertyIsEnumerable',
+-  'bind',
+-  'apply',
+-  'call',
++  "stopCapturing",
++  "toString",
++  "map",
++  "filter",
++  "forEach",
++  "valueOf",
++  "toPrecision",
++  "toExponential",
++  "constructor",
++  "toFixed",
++  "toLocaleString",
++  "toSource",
++  "charAt",
++  "charCodeAt",
++  "concat",
++  "indexOf",
++  "lastIndexOf",
++  "localeCompare",
++  "length",
++  "match",
++  "replace",
++  "search",
++  "slice",
++  "split",
++  "substr",
++  "substring",
++  "toLocaleLowerCase",
++  "toLocaleUpperCase",
++  "toLowerCase",
++  "toUpperCase",
++  "every",
++  "join",
++  "pop",
++  "push",
++  "reduce",
++  "reduceRight",
++  "reverse",
++  "shift",
++  "slice",
++  "some",
++  "sort",
++  "splice",
++  "unshift",
++  "hasOwnProperty",
++  "isPrototypeOf",
++  "propertyIsEnumerable",
++  "bind",
++  "apply",
++  "call",
+ ]);
+ 
+ class ClosureGenerator {
+-  trie = [{}, false];
++  constructor() {
++    _defineProperty(this, "trie", [{}, false]);
++  }
+ 
+   mergeAns(oldAns, newAns) {
+     const [purePath, node] = oldAns;
+     const [purePathUp, nodeUp] = newAns;
++
+     if (purePathUp.length !== 0) {
+       return [purePath.concat(purePathUp), nodeUp];
+     } else {
+@@ -119,16 +137,20 @@ class ClosureGenerator {
+ 
+   findPrefixRec(path) {
+     const notFound = [[], null];
+-    if (!path || path.node.type !== 'MemberExpression') {
++
++    if (!path || path.node.type !== "MemberExpression") {
+       return notFound;
+     }
++
+     const memberExpressionNode = path.node;
+-    if (memberExpressionNode.property.type !== 'Identifier') {
++
++    if (memberExpressionNode.property.type !== "Identifier") {
+       return notFound;
+     }
++
+     if (
+       memberExpressionNode.computed ||
+-      memberExpressionNode.property.name === 'value' ||
++      memberExpressionNode.property.name === "value" ||
+       blacklistedFunctions.has(memberExpressionNode.property.name)
+     ) {
+       // a.b[w] -> a.b.w in babel nodes
+@@ -136,14 +158,16 @@ class ClosureGenerator {
+       // sth.map(() => )
+       return notFound;
+     }
++
+     if (
+       path.parent &&
+-      path.parent.type === 'AssignmentExpression' &&
++      path.parent.type === "AssignmentExpression" &&
+       path.parent.left === path.node
+     ) {
+       /// captured.newProp = 5;
+       return notFound;
+     }
++
+     const purePath = [memberExpressionNode.property.name];
+     const node = memberExpressionNode;
+     const upAns = this.findPrefixRec(path.parentPath);
+@@ -161,26 +185,33 @@ class ClosureGenerator {
+     const [purePath, node] = this.findPrefix(base, babelPath);
+     let parent = this.trie;
+     let index = -1;
++
+     for (const current of purePath) {
+       index++;
++
+       if (parent[1]) {
+         continue;
+       }
++
+       if (!parent[0][current]) {
+         parent[0][current] = [{}, false];
+       }
++
+       if (index === purePath.length - 1) {
+         parent[0][current] = [node, true];
+       }
++
+       parent = parent[0][current];
+     }
+   }
+ 
+   generateNodeForBase(t, current, parent) {
+     const currentNode = parent[0][current];
++
+     if (currentNode[1]) {
+       return currentNode[0];
+     }
++
+     return t.objectExpression(
+       Object.keys(currentNode[0]).map((propertyName) =>
+         t.objectProperty(
+@@ -214,14 +245,14 @@ function buildWorkletString(t, fun, closureVariables, name) {
+       t.removeComments(path.node);
+     },
+   });
+-
+   let workletFunction;
++
+   if (closureVariables.length > 0) {
+     workletFunction = t.functionExpression(
+       t.identifier(name),
+       fun.node.params,
+       t.blockStatement([
+-        t.variableDeclaration('const', [
++        t.variableDeclaration("const", [
+           t.variableDeclarator(
+             t.objectPattern(
+               closureVariables.map((variable) =>
+@@ -233,21 +264,23 @@ function buildWorkletString(t, fun, closureVariables, name) {
+                 )
+               )
+             ),
+-            t.memberExpression(t.identifier('jsThis'), t.identifier('_closure'))
++            t.memberExpression(t.identifier("jsThis"), t.identifier("_closure"))
+           ),
+         ]),
+-        fun.get('body').node,
++        fun.get("body").node,
+       ])
+     );
+   } else {
+     workletFunction = t.functionExpression(
+       t.identifier(name),
+       fun.node.params,
+-      fun.get('body').node
++      fun.get("body").node
+     );
+   }
+ 
+-  return generate(workletFunction, { compact: true }).code;
++  return generate(workletFunction, {
++    compact: true,
++  }).code;
+ }
+ 
+ function processWorkletFunction(t, fun) {
+@@ -255,7 +288,7 @@ function processWorkletFunction(t, fun) {
+     return;
+   }
+ 
+-  let functionName = '_f';
++  let functionName = "_f";
+ 
+   if (fun.node.id) {
+     functionName = fun.node.id.name;
+@@ -263,15 +296,14 @@ function processWorkletFunction(t, fun) {
+ 
+   const closure = new Map();
+   const outputs = new Set();
+-  const closureGenerator = new ClosureGenerator();
+-
+-  // We use copy because some of the plugins don't update bindings and
++  const closureGenerator = new ClosureGenerator(); // We use copy because some of the plugins don't update bindings and
+   // some even break them
+-  const astWorkletCopy = parse('\n(' + fun.toString() + '\n)');
+ 
++  const astWorkletCopy = parse("\n(" + fun.toString() + "\n)");
+   traverse(astWorkletCopy, {
+     ReferencedIdentifier(path) {
+       const name = path.node.name;
++
+       if (globals.has(name) || (fun.node.id && fun.node.id.name === name)) {
+         return;
+       }
+@@ -279,15 +311,16 @@ function processWorkletFunction(t, fun) {
+       const parentNode = path.parent;
+ 
+       if (
+-        parentNode.type === 'MemberExpression' &&
+-        (parentNode.property === path.node && !parentNode.computed)
++        parentNode.type === "MemberExpression" &&
++        parentNode.property === path.node &&
++        !parentNode.computed
+       ) {
+         return;
+       }
+ 
+       if (
+-        parentNode.type === 'ObjectProperty' &&
+-        path.parentPath.parent.type === 'ObjectExpression' &&
++        parentNode.type === "ObjectProperty" &&
++        path.parentPath.parent.type === "ObjectExpression" &&
+         path.node !== parentNode.value
+       ) {
+         return;
+@@ -299,57 +332,58 @@ function processWorkletFunction(t, fun) {
+         if (currentScope.bindings[name] != null) {
+           return;
+         }
++
+         currentScope = currentScope.parent;
+       }
++
+       closure.set(name, path.node);
+       closureGenerator.addPath(name, path);
+     },
++
+     AssignmentExpression(path) {
+       // test for <somethin>.value = <something> expressions
+       const left = path.node.left;
++
+       if (
+         t.isMemberExpression(left) &&
+         t.isIdentifier(left.object) &&
+-        t.isIdentifier(left.property, { name: 'value' })
++        t.isIdentifier(left.property, {
++          name: "value",
++        })
+       ) {
+         outputs.add(left.object.name);
+       }
+     },
+   });
+-
+   fun.traverse({
+     DirectiveLiteral(path) {
+-      if (path.node.value === 'worklet' && path.getFunctionParent() === fun) {
++      if (path.node.value === "worklet" && path.getFunctionParent() === fun) {
+         path.parentPath.remove();
+       }
+     },
+   });
+   const variables = Array.from(closure.values());
+-
+-  const privateFunctionId = t.identifier('_f');
+-
+-  // if we don't clone other modules won't process parts of newFun defined below
++  const privateFunctionId = t.identifier("_f"); // if we don't clone other modules won't process parts of newFun defined below
+   // this is weird but couldn't find a better way to force transform helper to
+   // process the function
++
+   const clone = t.cloneNode(fun.node);
+   const funExpression = t.functionExpression(null, clone.params, clone.body);
+-
+   const funString = buildWorkletString(t, fun, variables, functionName);
+   const workletHash = hash(funString);
+-
+   const newFun = t.functionExpression(
+     fun.id,
+     [],
+     t.blockStatement([
+-      t.variableDeclaration('const', [
++      t.variableDeclaration("const", [
+         t.variableDeclarator(privateFunctionId, funExpression),
+       ]),
+       t.expressionStatement(
+         t.assignmentExpression(
+-          '=',
++          "=",
+           t.memberExpression(
+             privateFunctionId,
+-            t.identifier('_closure'),
++            t.identifier("_closure"),
+             false
+           ),
+           closureGenerator.generate(t, variables, closure.keys())
+@@ -357,10 +391,10 @@ function processWorkletFunction(t, fun) {
+       ),
+       t.expressionStatement(
+         t.assignmentExpression(
+-          '=',
++          "=",
+           t.memberExpression(
+             privateFunctionId,
+-            t.identifier('asString'),
++            t.identifier("asString"),
+             false
+           ),
+           t.stringLiteral(funString)
+@@ -368,10 +402,10 @@ function processWorkletFunction(t, fun) {
+       ),
+       t.expressionStatement(
+         t.assignmentExpression(
+-          '=',
++          "=",
+           t.memberExpression(
+             privateFunctionId,
+-            t.identifier('__workletHash'),
++            t.identifier("__workletHash"),
+             false
+           ),
+           t.numericLiteral(workletHash)
+@@ -380,8 +414,8 @@ function processWorkletFunction(t, fun) {
+       t.expressionStatement(
+         t.callExpression(
+           t.memberExpression(
+-            t.identifier('global'),
+-            t.identifier('__reanimatedWorkletInit'),
++            t.identifier("global"),
++            t.identifier("__reanimatedWorkletInit"),
+             false
+           ),
+           [privateFunctionId]
+@@ -390,18 +424,17 @@ function processWorkletFunction(t, fun) {
+       t.returnStatement(privateFunctionId),
+     ])
+   );
+-
+-  const replacement = t.callExpression(newFun, []);
+-  // we check if function needs to be assigned to variable declaration.
++  const replacement = t.callExpression(newFun, []); // we check if function needs to be assigned to variable declaration.
+   // This is needed if function definition directly in a scope. Some other ways
+   // where function definition can be used is for example with variable declaration:
+   // const ggg = function foo() { }
+   // ^ in such a case we don't need to definte variable for the function
++
+   const needDeclaration =
+     t.isScopable(fun.parent) || t.isExportNamedDeclaration(fun.parent);
+   fun.replaceWith(
+     fun.node.id && needDeclaration
+-      ? t.variableDeclaration('const', [
++      ? t.variableDeclaration("const", [
+           t.variableDeclarator(fun.node.id, replacement),
+         ])
+       : replacement
+@@ -410,22 +443,23 @@ function processWorkletFunction(t, fun) {
+ 
+ function processIfWorkletNode(t, path) {
+   const fun = path;
+-
+   fun.traverse({
+     DirectiveLiteral(path) {
+       const value = path.node.value;
+-      if (value === 'worklet' && path.getFunctionParent() === fun) {
++
++      if (value === "worklet" && path.getFunctionParent() === fun) {
+         // make sure "worklet" is listed among directives for the fun
+         // this is necessary as because of some bug, babel will attempt to
+         // process replaced function if it is nested inside another function
+         const directives = fun.node.body.directives;
++
+         if (
+           directives &&
+           directives.length > 0 &&
+           directives.some(
+             (directive) =>
+               t.isDirectiveLiteral(directive.value) &&
+-              directive.value.value === 'worklet'
++              directive.value.value === "worklet"
+           )
+         ) {
+           processWorkletFunction(t, fun);
+@@ -437,20 +471,24 @@ function processIfWorkletNode(t, path) {
+ 
+ function processWorklets(t, path, processor) {
+   const name = path.node.callee.name;
++
+   if (
+     objectHooks.has(name) &&
+-    path.get('arguments.0').type === 'ObjectExpression'
++    path.get("arguments.0").type === "ObjectExpression"
+   ) {
+-    const objectPath = path.get('arguments.0.properties.0');
++    const objectPath = path.get("arguments.0.properties.0");
++
+     if (!objectPath) {
+       // edge case empty object
+       return;
+     }
++
+     for (let i = 0; i < objectPath.container.length; i++) {
+-      processor(t, objectPath.getSibling(i).get('value'));
++      processor(t, objectPath.getSibling(i).get("value"));
+     }
+   } else {
+     const indexes = functionHooks.get(name);
++
+     if (Array.isArray(indexes)) {
+       indexes.forEach((index) => {
+         processor(t, path.get(`arguments.${index}`));
+@@ -459,25 +497,22 @@ function processWorklets(t, path, processor) {
+   }
+ }
+ 
+-const PLUGIN_BLACKLIST_NAMES = ['@babel/plugin-transform-object-assign'];
+-
++const PLUGIN_BLACKLIST_NAMES = ["@babel/plugin-transform-object-assign"];
+ const PLUGIN_BLACKLIST = PLUGIN_BLACKLIST_NAMES.map((pluginName) => {
+   try {
+-    const blacklistedPluginObject = require(pluginName);
+-    // All Babel polyfills use the declare method that's why we can create them like that.
++    const blacklistedPluginObject = require(pluginName); // All Babel polyfills use the declare method that's why we can create them like that.
+     // https://github.com/babel/babel/blob/main/packages/babel-helper-plugin-utils/src/index.js#L1
++
+     const blacklistedPlugin = blacklistedPluginObject.default({
+       assertVersion: (x) => true,
+     });
+-
+     visitors.explode(blacklistedPlugin.visitor);
+     return blacklistedPlugin;
+   } catch (e) {
+     console.warn(`Plugin ${pluginName} couldn't be removed!`);
+   }
+-});
++}); // plugin objects are created by babel internals and they don't carry any identifier
+ 
+-// plugin objects are created by babel internals and they don't carry any identifier
+ function removePluginsFromBlacklist(plugins) {
+   PLUGIN_BLACKLIST.forEach((blacklistedPlugin) => {
+     if (!blacklistedPlugin) {
+@@ -485,6 +520,7 @@ function removePluginsFromBlacklist(plugins) {
+     }
+ 
+     const toRemove = [];
++
+     for (let i = 0; i < plugins.length; i++) {
+       if (
+         JSON.stringify(Object.keys(plugins[i].visitor)) !==
+@@ -492,7 +528,9 @@ function removePluginsFromBlacklist(plugins) {
+       ) {
+         continue;
+       }
++
+       let areEqual = true;
++
+       for (const key of Object.keys(blacklistedPlugin.visitor)) {
+         if (
+           blacklistedPlugin.visitor[key].toString() !==
+@@ -512,7 +550,7 @@ function removePluginsFromBlacklist(plugins) {
+   });
+ }
+ 
+-module.exports = function({ types: t }) {
++module.exports = function ({ types: t }) {
+   return {
+     visitor: {
+       CallExpression: {
+@@ -520,12 +558,13 @@ module.exports = function({ types: t }) {
+           processWorklets(t, path, processWorkletFunction);
+         },
+       },
+-      'FunctionDeclaration|FunctionExpression|ArrowFunctionExpression': {
++      "FunctionDeclaration|FunctionExpression|ArrowFunctionExpression": {
+         exit(path) {
+           processIfWorkletNode(t, path);
+         },
+       },
+     },
++
+     // In this way we can modify babel options
+     // https://github.com/babel/babel/blob/eea156b2cb8deecfcf82d52aa1b71ba4995c7d68/packages/babel-core/src/transformation/normalize-opts.js#L64
+     manipulateOptions(opts, parserOpts) {
