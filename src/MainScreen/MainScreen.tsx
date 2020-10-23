@@ -13,7 +13,7 @@ import Animated, {
 import {ColorSpace, interpolateColor} from 'react-native-redash';
 import MovingBox from './MovingBox';
 import { useState } from 'react';
-const backColor = ['#171616','#bab023','#23ba62','#c7e68a','#238fba','#58e1e8','#3c23ba','#ad23ba','#ba2371','#ba2323','#ede4e4']
+const backColor = ['#7e7777','#534e11','#146937','#5f6e42','#15526b','#2a686b','#23156d','#5d1564','#5b1037','#ba2323','#605a50']
 
 const MainScreen = ({navigation}) => {
     const [start,setStart] = useState(false)
@@ -33,9 +33,27 @@ const MainScreen = ({navigation}) => {
     return (
     <View style={StyleGuide.mainScreen}>
       <Animated.View style={[StyleGuide.mainTop, animatedBackStyles]}>
-          <MovingBox boxControl={start}/>
-          <MovingBox boxControl={start}/>
-          <MovingBox boxControl={start}/>
+          <MovingBox boxControl={start} pos={0} />
+          <MovingBox boxControl={start} pos={1} />
+          <MovingBox boxControl={start} pos={2} />
+          <MovingBox boxControl={start} pos={3} />
+          <MovingBox boxControl={start} pos={4} />
+          <MovingBox boxControl={start} pos={5} />
+          <MovingBox boxControl={start} pos={6} />
+          <MovingBox boxControl={start} pos={7} />
+          <MovingBox boxControl={start} pos={8} />
+          <MovingBox boxControl={start} pos={9} />
+          <MovingBox boxControl={start} pos={10} />
+          <MovingBox boxControl={start} pos={11} />
+          <MovingBox boxControl={start} pos={12} />
+          <MovingBox boxControl={start} pos={13} />
+          <MovingBox boxControl={start} pos={14} />
+          <MovingBox boxControl={start} pos={15} />
+          <MovingBox boxControl={start} pos={16} />
+          <MovingBox boxControl={start} pos={17} />
+          <MovingBox boxControl={start} pos={18} />
+          <MovingBox boxControl={start} pos={19} />
+          <MovingBox boxControl={start} pos={20} />
       </Animated.View>
       <View style={StyleGuide.mainBottom}>
           <TouchableOpacity

@@ -36,7 +36,7 @@ const StyleGuide = {
     alignItems: 'center',
   },
   whiteFont : {fontSize: 16, color: '#DDDDDD'},
-  movingBox : {width:150,height:150,backgroundColor:'#333333',justifyContent: 'center',alignItems: 'center',left:120,top:100},
+  movingBox : {width:150,height:150,backgroundColor:'#333333',justifyContent:'center',alignItems:'center'},
   spacing: 8,
   palette: {
     primary: '#3884ff',
