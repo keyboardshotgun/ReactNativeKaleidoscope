@@ -57,19 +57,19 @@ const MainScreen = ({navigation}) => {
       </Animated.View>
       <View style={StyleGuide.mainBottom}>
           <TouchableOpacity
+              onPress={() => navigation.navigate('MainScreen')}
+              style={ [StyleGuide.mainTaps, {backgroundColor: '#000066'}] }>
+              <Text style={StyleGuide.whiteFont}>{'R.Box'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
               onPress={() => navigation.navigate('PanGesture')}
               style={ [StyleGuide.mainTaps, {backgroundColor: '#000033'}] }>
-              <Text style={StyleGuide.whiteFont}>1</Text>
+              <Text style={StyleGuide.whiteFont}>{'PG'}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-              onPress={() => false}
-              style={ [StyleGuide.mainTaps, {backgroundColor: '#000066'}] }>
-              <Text style={StyleGuide.whiteFont}>2</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-              onPress={() => false}
+              onPress={() => navigation.navigate('BouncingWave')}
               style={ [StyleGuide.mainTaps, {backgroundColor: '#000099'}] }>
-              <Text style={StyleGuide.whiteFont}>3</Text>
+              <Text style={StyleGuide.whiteFont}>{'B.Wave'}</Text>
           </TouchableOpacity>
           <TouchableOpacity
               onPress={() => false}
@@ -79,7 +79,7 @@ const MainScreen = ({navigation}) => {
       </View>
       <TouchableOpacity
           activeOpacity={0.5}
-          onPress={ ()=> HandlerAnimation() }
+          onPress={ () => HandlerAnimation() }
           style={StyleGuide.pinkButton}>
             <Text style={{color:'#FFFFFF'}}>{'TAP'}</Text>
       </TouchableOpacity>

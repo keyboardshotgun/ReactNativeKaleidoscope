@@ -1,15 +1,15 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, Button} from 'react-native';
 import Animated, {
   useAnimatedGestureHandler,
   useSharedValue,
-  useAnimatedStyle,
+  useAnimatedStyle, useDerivedValue, withTiming, Easing, useAnimatedProps, withSpring, withRepeat, cancelAnimation,
   /*withDecay,
   withSpring,*/
 } from 'react-native-reanimated';
 import {PanGestureHandler} from 'react-native-gesture-handler';
 import {clamp} from '../components/AnimatedHelpers';
-import Card, {Cards, CARD_WIDTH, CARD_HEIGHT} from './Card';
+import SimpleSlider from "./SimpleSlider";
 
 const styles = StyleSheet.create({
   container: {
@@ -27,8 +27,12 @@ interface GestureProps {
 const Gesture = ({width, height}: GestureProps) => {
   const boundX = width - BoxSize;
   const boundY = height - BoxSize;
-  const translateX = useSharedValue(0);
-  const translateY = useSharedValue(0);
+  const translateX = useSharedValue(boundX / 2);
+  const translateY = useSharedValue(boundY / 2);
+  const tX = useSharedValue(boundX / 2);
+  const tY = useSharedValue(boundY / 2);
+  const roT = useSharedValue(0);
+
   const onGestureEvent = useAnimatedGestureHandler<{
     offsetX: number;
     offsetY: number;
@@ -40,20 +44,9 @@ const Gesture = ({width, height}: GestureProps) => {
     onActive: (event, ctx) => {
       translateX.value = clamp(ctx.offsetX + event.translationX, 0, boundX);
       translateY.value = clamp(ctx.offsetY + event.translationY, 0, boundY);
-    },
-    onEnd: ({velocityX, velocityY}) => {
-      // translateX.value = ctx.offsetX;
-      // translateY.value = ctx.offsetY;
-      // translateX.value = withSpring({
-      //   velocity: velocityX,
-      //   clamp: [0, boundX],
-      // });
-      // translateY.value = withSpring({
-      //   velocity: velocityY,
-      //   clamp: [0, boundY],
-      // });
-    },
+    }
   });
+
   const style = useAnimatedStyle(() => {
     return {
       transform: [
@@ -62,13 +55,47 @@ const Gesture = ({width, height}: GestureProps) => {
       ],
     };
   });
+
+  const onHandlerStateChange = () => {
+    tX.value = withTiming(translateX.value, {
+      duration: 300,
+      easing: Easing.bounce
+    });
+    tY.value = withTiming(translateY.value,{
+      duration: 300,
+      easing: Easing.bounce
+    });
+  }
+
+  const style2 = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {translateX: tX.value},
+        {translateY: tY.value},
+        {rotateZ : roT.value + 'deg'},
+      ],
+    };
+  });
+
+  const onChangWidth = (val:number) => {
+    cancelAnimation(roT);
+    roT.value = withRepeat( withSpring(Math.abs(val) * Math.PI), val/10+1, true)
+  }
+
   return (
     <View style={styles.container}>
-      <PanGestureHandler {...{onGestureEvent}}>
+      <Animated.View style={[style2,{width:BoxSize,height:BoxSize,opacity:0.5,backgroundColor:'#770000',position:'absolute'}]} />
+      <PanGestureHandler {...{onGestureEvent, onHandlerStateChange}}>
         <Animated.View {...{style}}>
-          <View style={{width:BoxSize,height:BoxSize,backgroundColor:'red'}} />
+          <View style={{width:BoxSize,height:BoxSize,backgroundColor:'#FF0000',opacity:0.8}} />
         </Animated.View>
       </PanGestureHandler>
+      <SimpleSlider
+          onChangWidth={(val) => onChangWidth(val)}
+          sliderPositionFromBottom={0}
+          sliderHeight={90}
+          pointerShadow={2}
+      />
     </View>
   );
 };
