@@ -79,7 +79,9 @@ const Gesture = ({width, height}: GestureProps) => {
 
   const onChangWidth = (val:number) => {
     cancelAnimation(roT);
-    roT.value = withRepeat( withSpring(Math.abs(val) * Math.PI), val/10+1, true)
+    roT.value = withSpring(Math.abs(val) * Math.PI , {
+      velocity: 0.6
+    })
   }
 
   return (

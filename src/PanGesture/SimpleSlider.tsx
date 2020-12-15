@@ -60,9 +60,7 @@ const SimpleSlider = (props:SimpleSlider) => {
         }
     });
 
-    const onGestureEvent = useAnimatedGestureHandler<{
-        offsetX: number;
-    }>( {
+    const onGestureEvent = useAnimatedGestureHandler( {
         onStart: (_event, ctx) => {
             ctx.offsetX = translateX.value;
             volX.value = withSpring(1.2);
