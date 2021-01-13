@@ -1,12 +1,14 @@
-import React from 'react';
-
+import React, { useReducer } from 'react'
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import MainScreen from './MainScreen/MainScreen';
 import PanGesture from './PanGesture/index';
 import BouncingWave from "./BouncingWave/BouncingWave";
-import {Routes} from './Routes';
+import TestScreen from "./TestScreen/TestScreen";
+import RandomScreen from "./RandomBox/RandomScreen";
+import BouncingBox from "./BouncingBox/BouncingBox";
 
+import {Routes} from './Routes';
 const Stack = createStackNavigator<Routes>();
 const AppRoot = () => {
     return (
@@ -17,32 +19,53 @@ const AppRoot = () => {
                 name={'MainScreen'}
                 component={MainScreen}
                 options={{
-                    title: 'Random Box',
+                    title: 'ReactNativeKaleidoscope',
                 }}
             />
-            <Stack.Screen
-                name={'PanGesture'}
-                component={PanGesture}
-                options={{
-                    title: 'PanGesture',
-                }}
-            />
-            <Stack.Screen
-                name={'BouncingWave'}
-                component={BouncingWave}
-                options={{
-                    title: 'BouncingWave',
-                }}
-            />
+                <Stack.Screen
+                    name={'RandomScreen'}
+                    component={RandomScreen}
+                    options={{
+                        title: 'Random Box',
+                    }}
+                />
+                <Stack.Screen
+                    name={'PanGesture'}
+                    component={PanGesture}
+                    options={{
+                        title: 'PanGesture',
+                    }}
+                />
+                <Stack.Screen
+                    name={'BouncingWave'}
+                    component={BouncingWave}
+                    options={{
+                        title: 'BouncingWave',
+                    }}
+                />
+                <Stack.Screen
+                    name={'TestScreen'}
+                    component={TestScreen}
+                    options={{
+                        title: 'Kaleidoscope Box',
+                    }}
+                />
+                <Stack.Screen
+                    name={'BouncingBox'}
+                    component={BouncingBox}
+                    options={{
+                        title: 'Bouncing Box',
+                    }}
+                />
         </Stack.Navigator>
     );
 };
 
 const App = () => {
     return (
-        <NavigationContainer>
-            <AppRoot/>
-        </NavigationContainer>
+            <NavigationContainer>
+                <AppRoot/>
+            </NavigationContainer>
     );
 };
 

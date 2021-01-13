@@ -12,6 +12,9 @@
 import React, {useEffect, useState} from 'react';
 import {View, Button, Image} from "react-native";
 const birdImage = require('../../assets/bird/pshBird.png');
+const topPipe = require('../../assets/pipes/top_pipe_small.png');
+const bottomPipe = require('../../assets/pipes/bottom_pipe_small.png');
+
 import StyleGuide from "../components/StyleGuide";
 import Animated, {
     Easing,
@@ -20,7 +23,7 @@ import Animated, {
     withTiming,
     cancelAnimation, withSpring, withRepeat, useDerivedValue, useAnimatedReaction, runOnJS, withSequence, withDelay
 } from "react-native-reanimated";
-import Clouds from "./Clouds";
+// import Clouds from "./Clouds";
 import {useHeaderHeight} from '@react-navigation/stack';
 
 const BouncingWave = () => {
@@ -270,13 +273,25 @@ const BouncingWave = () => {
                 width: 50,
                 height: StyleGuide.deviceHeight * 0.35,
                 backgroundColor: '#23b71b'
-            }]}/>
+            }]}>
+                <Image
+                    source={bottomPipe}
+                    resizeMode={"cover"}
+                    style={{width: '100%', height: '100%'}}
+                />
+            </Animated.View>
 
             <Animated.View style={[pipeMovingDerivedStyles, {
                 width: 50,
                 height: StyleGuide.deviceHeight * 0.35 + ballDiameter,
                 backgroundColor: '#23b71b'
-            }]}/>
+            }]}>
+                <Image
+                    source={topPipe}
+                    resizeMode={"cover"}
+                    style={{width: '100%', height: '100%'}}
+                />
+            </Animated.View>
 
             <View style={{position: 'absolute', top: 10, right: 30}}>
                 <Animated.Text>{`Left : ${sBirdLife}`}</Animated.Text>

@@ -2,14 +2,11 @@ import React, {useEffect} from 'react';
 import StyleGuide from '../components/StyleGuide';
 import {Text} from 'react-native';
 import Animated, {cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
-
 const backColor = ['#171616','#bab023','#23ba62','#c7e68a','#238fba','#58e1e8','#3c23ba','#ad23ba','#ba2371','#ba2323','#ede4e4']
 const positionFixed = (values) => {
     return values * 150;
 }
-
 const DUR = 700;
-
 const MovingBox = (props) => {
     const calDiff = positionFixed(props.pos)
     const offsetX = useSharedValue(0);
@@ -18,7 +15,6 @@ const MovingBox = (props) => {
     const borderRadius = useSharedValue(5);
     const backgroundC = useSharedValue('');
     const HandlerAnimation = () => {
-        'worklet';
         borderRadius.value = withTiming( borderRadius.value == 5 ? StyleGuide.movingBox.width / 2 : 5 ,
             {
                 duration: DUR / 2,
@@ -39,7 +35,6 @@ const MovingBox = (props) => {
                 duration: DUR,
                 easing: Easing.bounce
             });
-
     };
 
     const animatedStyles = useAnimatedStyle(() => {

@@ -3,7 +3,7 @@ import {Dimensions} from 'react-native';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
-const StyleGuide = {
+const StyleGuide : any = {
     deviceHeight: DEVICE_HEIGHT,
     deviceWidth: DEVICE_WIDTH,
     mainScreen: {
@@ -12,7 +12,7 @@ const StyleGuide = {
         height: DEVICE_HEIGHT,
         backgroundColor: '#333333',
     },
-    mainScreenSky : {
+    mainScreenSky: {
         flex: 1,
         width: DEVICE_WIDTH,
         height: DEVICE_HEIGHT,
@@ -21,7 +21,7 @@ const StyleGuide = {
     pinkButton: {
         position: 'absolute'
         , left: DEVICE_WIDTH / 2 - 40
-        , top: DEVICE_HEIGHT - 200
+        , top: DEVICE_HEIGHT - 150
         , backgroundColor: '#FF55FF'
         , width: 80, height: 30
         , borderRadius: 15
@@ -29,13 +29,13 @@ const StyleGuide = {
         , alignItems: 'center'
     },
     mainTop: {
-        flex: 0.92,
+        flex: 1,
         backgroundColor: '#c85959',
     },
     mainBottom: {
-        flex: 0.08,
+        flex: 1,
         backgroundColor: '#78b5b8',
-        flexDirection: 'row',
+        flexDirection: 'column',
     },
     mainTaps: {
         flex: 0.25,
@@ -92,6 +92,17 @@ const StyleGuide = {
             lineHeight: 26,
         },
     },
+    staticBox : {width:300,height:300,backgroundColor:'#FFFFFF',borderWidth:1,borderColor:'#333333'},
+    kBox: {
+        position: 'absolute',
+        left: -1,
+        top: -1,
+        width: 300,
+        height: 300,
+        backgroundColor: '#FFFFFF',
+        borderWidth: 1,
+        borderColor: '#333333'
+    }
 };
 
 export default StyleGuide;
