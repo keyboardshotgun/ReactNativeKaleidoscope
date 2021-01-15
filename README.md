@@ -1,4 +1,4 @@
-# ReactNativeKaleidoscope
+# ReactNative Kaleidoscope
 
 🎪 React-Native + Typescript + React-Native-Animatedv2 playground 🎠
 
