@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import Svg, { Defs, LinearGradient, Path, Rect, Stop, Text } from 'react-native-svg';
+import Svg, {Defs, LinearGradient, Path, Rect, Stop, Text} from 'react-native-svg';
 import {Button, View} from "react-native";
 import {StyleGuide} from "../components";
 import Animated, {
@@ -12,24 +12,29 @@ import Animated, {
     withTiming
 } from "react-native-reanimated";
 import {mix} from 'react-native-redash';
+import {TextInput} from "react-native-gesture-handler";
 
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const BouncingBox = () => {
 
     const progress = useSharedValue(0);
     const risingSun = useSharedValue(0);
+    const countDownText = useSharedValue(0);
 
     useEffect(() => {
-        console.log('risingSun',risingSun.value);
         return () => {
             cancelAnimation(progress)
             cancelAnimation(risingSun)
+            cancelAnimation(countDownText)
         }
-    }, [progress,risingSun]);
+    }, [progress, risingSun]);
 
     const startWave = () => {
         cancelAnimation(progress);
         cancelAnimation(risingSun);
+        cancelAnimation(countDownText);
+
         progress.value = withRepeat(
             withTiming(1, {duration: 5000, easing: Easing.inOut(Easing.ease)}),
             0,
@@ -37,181 +42,187 @@ const BouncingBox = () => {
 
         risingSun.value = withRepeat(
             withTiming(1, {duration: 15000, easing: Easing.linear}),
-            0,
-            true)
+            1,
+            false)
+
+        countDownText.value = withTiming(1, {duration: 5000, easing: Easing.linear});
     }
 
     const stopWave = () => {
         cancelAnimation(progress);
         cancelAnimation(risingSun);
+        cancelAnimation(countDownText);
         progress.value = 0;
         risingSun.value = 0;
+        countDownText.value = 0;
     }
 
-    const firstWave = useDerivedValue(()=>{
+    const firstWave = useDerivedValue(() => {
         'worklet';
         const m = mix.bind(null, progress.value);
         // m(시작값 , 종료값)
-        return { x : m(-30,130) , y : m( 120 , 90) , z: m(125, 135) } ;
-    },[progress])
+        return {x: m(-30, 130), y: m(120, 90), z: m(125, 135)};
+    }, [progress])
 
     const path1 = useAnimatedProps(() => {
         'worklet';
         const {x, y, z} = firstWave.value;
-        return { d: `M -30 ${z} Q ${x} ${y} 130 ${z}`};
+        return {d: `M -30 ${z} Q ${x} ${y} 130 ${z}`};
     });
 
     // ==========================================================
 
-    const secondWave = useDerivedValue(()=>{
+    const secondWave = useDerivedValue(() => {
         'worklet';
         const m = mix.bind(null, progress.value);
-        return { x : m(90,-10) , y : m( 120 , 100) } ;
-    },[progress])
+        return {x: m(90, -10), y: m(120, 100)};
+    }, [progress])
 
     const path2 = useAnimatedProps(() => {
         'worklet';
-        const {x, y } = secondWave.value;
-        return { d: `M -25 115 Q ${x} ${y} 125 115`};
+        const {x, y} = secondWave.value;
+        return {d: `M -25 115 Q ${x} ${y} 125 115`};
     });
 
     // ==========================================================
 
-    const thirdWave = useDerivedValue(()=>{
+    const thirdWave = useDerivedValue(() => {
         'worklet';
         const m = mix.bind(null, progress.value);
-        return { x : m(-30,120) , y : m( 110 , 95) } ;
-    },[progress])
+        return {x: m(-30, 120), y: m(110, 95)};
+    }, [progress])
 
     const path3 = useAnimatedProps(() => {
         'worklet';
         const {x, y} = thirdWave.value;
-        return { d: `M -20 110 Q ${x} ${y} 120 110`};
+        return {d: `M -20 110 Q ${x} ${y} 120 110`};
     });
 
 
     // ==========================================================
-    const fourthWave = useDerivedValue(()=>{
+    const fourthWave = useDerivedValue(() => {
         'worklet';
         const m = mix.bind(null, progress.value);
-        return { x : m(110,-10) , y : m( 90 , 70) } ;
-    },[progress])
+        return {x: m(110, -10), y: m(90, 70)};
+    }, [progress])
 
     const path4 = useAnimatedProps(() => {
         'worklet';
         const {x, y} = fourthWave.value;
-        return { d: `M -15 105 Q ${x} ${y} 115 105`};
+        return {d: `M -15 105 Q ${x} ${y} 115 105`};
     });
 
     // ==========================================================
-    const fifthWave = useDerivedValue(()=>{
+    const fifthWave = useDerivedValue(() => {
         'worklet';
         const m = mix.bind(null, progress.value);
-        return { x : m(-50,150) , y : m( 90 , 70) } ;
-    },[progress])
+        return {x: m(-50, 150), y: m(90, 70)};
+    }, [progress])
 
     const path5 = useAnimatedProps(() => {
         'worklet';
         const {x, y} = fifthWave.value;
-        return { d: `M -20 90 Q ${x} ${y} 130 90`};
+        return {d: `M -20 90 Q ${x} ${y} 130 90`};
     });
 
     // ==========================================================
-    const sixthWave = useDerivedValue(()=>{
+    const sixthWave = useDerivedValue(() => {
         'worklet';
         const m = mix.bind(null, progress.value);
-        return { x : m(-40, 140) , y : m( 70 , 88) } ;
-    },[progress])
+        return {x: m(-40, 140), y: m(70, 88)};
+    }, [progress])
 
     const path6 = useAnimatedProps(() => {
         'worklet';
         const {x, y} = sixthWave.value;
-        return { d: `M -20 88 Q ${x} ${y} 130 88`};
+        return {d: `M -20 88 Q ${x} ${y} 130 88`};
     });
 
     // ==========================================================
-    const seventhWave = useDerivedValue(()=>{
+    const seventhWave = useDerivedValue(() => {
         'worklet';
         const m = mix.bind(null, progress.value);
-        return { x : m(-10, 120) , y : m( 80 , 80) } ;
-    },[progress])
+        return {x: m(-10, 120), y: m(80, 80)};
+    }, [progress])
 
     const path7 = useAnimatedProps(() => {
         'worklet';
         const {x, y} = seventhWave.value;
-        return { d: `M 0 78 Q ${x} ${y} 100 78`};
+        return {d: `M 0 78 Q ${x} ${y} 100 78`};
     });
 
     //============================================ sun
 
-    const sun = useDerivedValue(()=>{
+    const sun = useDerivedValue(() => {
         'worklet';
         const m = mix.bind(null, risingSun.value);
-        return { x: m(580, 450) , cxy: m(25, 40)};
+        return {x: m(580, 450), cxy: m(25, 40)};
     })
 
     const sunPath = useAnimatedProps(() => {
         'worklet';
-        const { x, cxy } = sun.value;
-        return { d: `M 200 ${x} 
-        a ${cxy} ${cxy} 0 1 1 1,0`};
+        const {x, cxy} = sun.value;
+        return {
+            d: `M 200 ${x} 
+        a ${cxy} ${cxy} 0 1 1 1,0`
+        };
     });
 
     const sunPath2 = useAnimatedProps(() => {
         'worklet';
-        return { d: `M 200 546 a 35 35 0 1 1 1,0`};
+        return {d: `M 200 546 a 35 35 0 1 1 1,0`};
     });
 
-    const sunShadow = useDerivedValue(()=>{
+    const sunShadow = useDerivedValue(() => {
         'worklet';
         const m = mix.bind(null, risingSun.value);
-        return { x: m(0, 0) , rx : m(30, 40) , ry : m( -10 , 30) }  ;
+        return {x: m(0, 0), rx: m(30, 40), ry: m(-10, 30)};
     })
 
     const sunBottomPath = useAnimatedProps(() => {
         'worklet';
         const {x, rx, ry} = sunShadow.value;
-        return { d: `M 225 ${x} a ${rx} ${ry} 0 1 1 -50,0`};
+        return {d: `M 225 ${x} a ${rx} ${ry} 0 1 1 -50,0`};
     });
 
-    const sunShadowOpacity = useDerivedValue(()=>{
+    const sunShadowOpacity = useDerivedValue(() => {
         'worklet';
         const m = mix.bind(null, risingSun.value);
-        return { o : m(0, 0.3) }  ;
+        return {o: m(0, 0.3)};
     })
 
     const sunConnectOpacity = useAnimatedStyle(() => {
         return {
-            opacity : risingSun.value >= 0.77 && risingSun.value <= 0.785  ? 1 : 0
+            opacity: risingSun.value >= 0.77 && risingSun.value <= 0.785 ? 1 : 0
         };
     });
 
     const sunBottomOpacity = useAnimatedStyle(() => {
         return {
-            opacity : risingSun.value >= 0.25 ? sunShadowOpacity.value.o : 0
+            opacity: risingSun.value >= 0.25 ? sunShadowOpacity.value.o : 0
         };
     });
+
+    const textAnimation = useDerivedValue(() => {
+        'worklet';
+        const m = mix.bind(null, countDownText.value);
+        return {t: m(10, 0), s: m(70, 0), left: m(150, 200) , top: m(300, StyleGuide.deviceHeight*0.61) };
+    })
+
+    const animatedTextProps = useAnimatedProps(() => {
+        const timerText = textAnimation.value.t <= 0 ? '' : `${textAnimation.value.t.toFixed(1)}`;
+        const fontSize = textAnimation.value.t >= 9.9 ? 0 : textAnimation.value.s;
+        return {
+            text: timerText,
+            fontSize: fontSize,
+            left : textAnimation.value.left,
+            top : textAnimation.value.top,
+        }
+    })
 
     return (
         <>
             <View style={StyleGuide.mainOcean}>
-
-                <Svg height="60" width="200"
-                     style={{position: 'absolute', left: 0, top: 0}}
-                >
-                    <Text
-                        fill="none"
-                        stroke="purple"
-                        fontSize="20"
-                        fontWeight="bold"
-                        x="100"
-                        y="20"
-                        textAnchor="middle"
-                    >
-                        STROKED TEXT
-                    </Text>
-                </Svg>
-
                 <Svg height={StyleGuide.deviceHeight * 0.65}
                      width={StyleGuide.deviceWidth}
                      style={{position: 'absolute', left: 0, top: 0}}>
@@ -228,6 +239,19 @@ const BouncingBox = () => {
                           height={StyleGuide.deviceHeight * 0.65}
                           fill="url(#grad)"/>
 
+                    <Text
+                        fill="none"
+                        stroke="#FFD080"
+                        strokeWidth={0.3}
+                        fontSize="15"
+                        fontWeight="bolder"
+                        x="200"
+                        y="45"
+                        textAnchor="middle"
+                    >
+                        SVG SUN RISING
+                    </Text>
+
                     <AnimatedPath
                         style={sunConnectOpacity}
                         animatedProps={sunPath2}
@@ -241,10 +265,21 @@ const BouncingBox = () => {
                         fill='#FAF8FA' opacity={1}
                     />
                 </Svg>
+
+                <AnimatedTextInput
+                    style={{
+                         position:'absolute'
+                        ,fontSize: 70
+                    }}
+                    underlineColorAndroid="transparent"
+                    editable={false}
+                    value={''}
+                    animatedProps={animatedTextProps}
+                />
+
                 <Svg height={StyleGuide.deviceHeight * 0.35}
                      width={StyleGuide.deviceWidth}
                      style={{position: 'absolute', left: 0, top: StyleGuide.deviceHeight * 0.65}}>
-                    {/* #000000 #1b5f5e #b2d0c6 #feb15f #da4531 */}
                     <Defs>
                         <LinearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
                             <Stop offset="0" stopColor="#FFFFFF" stopOpacity="1"/>
@@ -254,6 +289,7 @@ const BouncingBox = () => {
                             {/*#1b5f5e*/}
                         </LinearGradient>
                     </Defs>
+
                     <Rect x="0" y="0"
                           width={StyleGuide.deviceWidth}
                           height={StyleGuide.deviceHeight * 0.35}
@@ -277,14 +313,13 @@ const BouncingBox = () => {
                     }}
                 >
                     <AnimatedPath animatedProps={path7} strokeWidth={0.1} stroke="transparent" fill='#B96E6E'/>
-                    <AnimatedPath animatedProps={path6} strokeWidth={0.1} stroke="#FFFFFF" />
-                    <AnimatedPath animatedProps={path5} strokeWidth={0.1} stroke="#FFFFFF" />
-                    <AnimatedPath animatedProps={path4} strokeWidth={0.1} stroke="#FFFFFF" />
-                    <AnimatedPath animatedProps={path3} strokeWidth={0.1} stroke="#FFFFFF" />
-                    <AnimatedPath animatedProps={path2} strokeWidth={0.1} stroke="#FFFFFF" />
-                    <AnimatedPath animatedProps={path1} strokeWidth={0.1} stroke="#FFFFFF" fill="#1B4B4A"  />
+                    <AnimatedPath animatedProps={path6} strokeWidth={0.1} stroke="#FFFFFF"/>
+                    <AnimatedPath animatedProps={path5} strokeWidth={0.1} stroke="#FFFFFF"/>
+                    <AnimatedPath animatedProps={path4} strokeWidth={0.1} stroke="#FFFFFF"/>
+                    <AnimatedPath animatedProps={path3} strokeWidth={0.1} stroke="#FFFFFF"/>
+                    <AnimatedPath animatedProps={path2} strokeWidth={0.1} stroke="#FFFFFF"/>
+                    <AnimatedPath animatedProps={path1} strokeWidth={0.1} stroke="#FFFFFF" fill="#1B4B4A"/>
                 </Svg>
-
 
                 <View style={{
                     position: 'absolute', left: 0, top: 20
@@ -294,7 +329,7 @@ const BouncingBox = () => {
                     , width: StyleGuide.deviceWidth
                     , height: 40
                 }}>
-                    <Button title={'start'} onPress={() => startWave()} color={'#da4531'} />
+                    <Button title={'start'} onPress={() => startWave()} color={'#da4531'}/>
                     <Button title={'stop'} onPress={() => stopWave()} color={'#da4531'}/>
                 </View>
             </View>
