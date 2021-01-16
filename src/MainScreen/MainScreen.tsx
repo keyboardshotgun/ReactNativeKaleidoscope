@@ -28,7 +28,7 @@ const MainScreen = ({navigation} : any) => {
           <TouchableOpacity
               onPress={() => navigation.navigate('BouncingBox')}
               style={ [StyleGuide.mainTaps, {backgroundColor: '#000033'}] }>
-              <Text style={StyleGuide.whiteFont}>{'Bouncing Box'}</Text>
+              <Text style={StyleGuide.whiteFont}>{'Sunny'}</Text>
           </TouchableOpacity>
       </View>
     </View>

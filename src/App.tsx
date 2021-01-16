@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import MainScreen from './MainScreen/MainScreen';
@@ -54,7 +54,7 @@ const AppRoot = () => {
                     name={'BouncingBox'}
                     component={BouncingBox}
                     options={{
-                        title: 'Bouncing Box',
+                        title: 'Sunny',
                     }}
                 />
         </Stack.Navigator>
