@@ -12,6 +12,12 @@ const StyleGuide : any = {
         height: DEVICE_HEIGHT,
         backgroundColor: '#333333',
     },
+    mainOcean: {
+        flex: 1,
+        width: DEVICE_WIDTH,
+        height: DEVICE_HEIGHT,
+        backgroundColor: '#9b1c1c',
+    },
     mainScreenSky: {
         flex: 1,
         width: DEVICE_WIDTH,
