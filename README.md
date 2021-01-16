@@ -18,3 +18,7 @@ Tab 3 : Eyebird (flappy bird, v.0.1)
 Tab 4 : Kaleidoscope Box
 
 ![kaleidoscope_demo](https://user-images.githubusercontent.com/25360777/104521231-d61bb300-563f-11eb-8a35-bd096af1b876.gif)
+
+Tab 5 : Svg Rising Sun
+
+![sun_rising](https://user-images.githubusercontent.com/25360777/104815754-d55e6900-5859-11eb-953a-42f177d03d91.gif)
