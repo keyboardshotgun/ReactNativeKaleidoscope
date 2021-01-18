@@ -30,6 +30,11 @@ const MainScreen = ({navigation} : any) => {
               style={ [StyleGuide.mainTaps, {backgroundColor: '#000033'}] }>
               <Text style={StyleGuide.whiteFont}>{'Sunny'}</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+              onPress={() => navigation.navigate('ScrollTypeA')}
+              style={ [StyleGuide.mainTaps, {backgroundColor: '#000066'}] }>
+              <Text style={StyleGuide.whiteFont}>{'ScrollTypeA'}</Text>
+          </TouchableOpacity>
       </View>
     </View>
   );

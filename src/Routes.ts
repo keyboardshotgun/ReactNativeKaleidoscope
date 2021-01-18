@@ -5,4 +5,5 @@ export type Routes = {
   BouncingWave: undefined;
   TestScreen : undefined;
   BouncingBox : undefined;
+  ScrollTypeA : undefined;
 };

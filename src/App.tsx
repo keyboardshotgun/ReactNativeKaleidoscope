@@ -7,6 +7,7 @@ import BouncingWave from "./BouncingWave/BouncingWave";
 import TestScreen from "./TestScreen/TestScreen";
 import RandomScreen from "./RandomBox/RandomScreen";
 import BouncingBox from "./BouncingBox/BouncingBox";
+import ScrollTypeA from "./ScrollTypeA/ScrollTypeA";
 
 import {Routes} from './Routes';
 const Stack = createStackNavigator<Routes>();
@@ -55,6 +56,13 @@ const AppRoot = () => {
                     component={BouncingBox}
                     options={{
                         title: 'Sunny',
+                    }}
+                />
+                <Stack.Screen
+                    name={'ScrollTypeA'}
+                    component={ScrollTypeA}
+                    options={{
+                        title: 'ScrollTypeA',
                     }}
                 />
         </Stack.Navigator>

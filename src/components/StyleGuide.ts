@@ -108,7 +108,97 @@ const StyleGuide : any = {
         backgroundColor: '#FFFFFF',
         borderWidth: 1,
         borderColor: '#333333'
-    }
+    },
+    colors_data : [
+        {
+            id: 0,
+            start: "#00E0D3",
+            end: "#00B4D4",
+        },
+        {
+            id: 1,
+            start: "#00B4D4",
+            end: "#409CAE",
+        },
+        {
+            id: 2,
+            start: "#66D8A4",
+            end: "#409CAE",
+        },
+        {
+            id: 3,
+            start: "#FC727B",
+            end: "#F468A0",
+        },
+        {
+            id: 4,
+            start: "#8289EA",
+            end: "#7A6FC1",
+        },
+        {
+            id: 5,
+            start: "#FEC7A3",
+            end: "#FD9F9C",
+        },
+
+        {
+            id: 6,
+            start: "#023fa5",
+            end: "#7d87b9",
+        },
+
+        {
+            id: 7,
+            start: "#bec1d4",
+            end:  "#d6bcc0",
+        },
+        {
+            id: 8,
+            start: "#bb7784",
+            end: "#8e063b",
+        },
+
+        {
+            id: 9,
+            start: "#4a6fe3",
+            end: "#8595e1",
+        },
+        {
+            id: 10,
+            start: "#b5bbe3",
+            end: "#e6afb9",
+        },
+        {
+            id: 11,
+            start: "#e07b91",
+            end: "#d33f6a",
+        },
+        {
+            id: 12,
+            start: "#11c638",
+            end: "#8dd593",
+        },
+        {
+            id: 13,
+            start: "#c6dec7",
+            end: "#ead3c6",
+        },
+        {
+            id: 14,
+            start: "#f0b98d",
+            end: "#0fcfc0",
+        },
+        {
+            id: 15,
+            start: "#9cded6",
+            end: "#d5eae7",
+        },
+        {
+            id: 16,
+            start: "#f6c4e1",
+            end: "#f79cd4",
+        },
+    ],
 };
 
 export default StyleGuide;
