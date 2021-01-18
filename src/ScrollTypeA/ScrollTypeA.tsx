@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     }
 })
 
-const splitPoints = StyleGuide.colors_data.map((_, i) => -i * Post_WIDTH);
+const splitPoints = StyleGuide.colors_data.map(( _ : object, i : number) => -i * Post_WIDTH);
 const BackRectangle = Animated.createAnimatedComponent(Rect);
 const ScrollTypeA = () => {
 
@@ -118,7 +118,7 @@ const ScrollTypeA = () => {
                 <Animated.View style={[styles.subContainer]}>
                     <View style={styles.placeholder}/>
                     {
-                        StyleGuide.colors_data.map((color, index) => {
+                        StyleGuide.colors_data.map( ( color : { start: string, end : string  } , index : number ) => {
                             return (
                                 <PostComponent
                                     color={color}
