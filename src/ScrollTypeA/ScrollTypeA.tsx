@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, View} from "react-native";
+import React, {useEffect, useRef, useState} from 'react';
+import {FlatList, StyleSheet, View, Animated as RAnimated } from "react-native";
 import Animated, {
     useAnimatedGestureHandler,
     useAnimatedStyle,
@@ -37,6 +37,9 @@ const ScrollTypeA = () => {
     });
 
     const translateX = useSharedValue(0);
+
+    const scrollX = useRef(new RAnimated.Value(0)).current;
+
     const onGestureEvent = useAnimatedGestureHandler<PanGestureHandlerGestureEvent
         , { x: number }>({
         onStart: (_, ctx) => {
@@ -63,30 +66,50 @@ const ScrollTypeA = () => {
         }
     })
 
+    useEffect(()=>{
+        console.log('scrollY : ', scrollX);
+    },[scrollX])
+
     return (
         <View style={styles.container}>
             <View style={styles.subContainer}>
-                <Animated.ScrollView
-                    horizontal={true}
-                    pagingEnabled={true}
-                    bounces={true}
-                    alwaysBounceHorizontal={true}
+                <RAnimated.FlatList
+                    data={[...StyleGuide.colors_data].reverse()}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
-                    scrollEventThrottle={15}>
-                    {
-                        [...StyleGuide.colors_data].reverse().map((color, index) => {
-                            return (
-                                <PostComponent color={color}
-                                               key={index}
-                                               index={index}
-                                               translateX={undefined}
-                                               onPress={undefined}
-                                />
-                            )
+                    horizontal={true}
+                    onScroll={RAnimated.event(
+                    [{ nativeEvent:
+                                    { contentOffset :
+                                            {
+                                                x : scrollX
+                                            }
+                                    }
+                        }],
+                        {useNativeDriver: true}
+                    )}
+                    keyExtractor={ (item) => '#'+(Math.random() * 89999999 + 100000)  }
+                    renderItem={ ({item, index}) => {
+                        const inputRange = [
+                            0,
+                            0.5,
+                            Post_WIDTH * index+1,
+                            Post_WIDTH * index+2,
+                        ]
+                        const scaleValue = scrollX.interpolate({
+                            inputRange,
+                            outputRange: [1, 1 , 0.5, 0.1]
                         })
-                    }
-                </Animated.ScrollView>
+                        return (
+                            <PostComponent color={item}
+                                           index={index}
+                                           scaleValue={scaleValue}
+                                           translateX={undefined}
+                                           onPress={undefined}
+                            />
+                        )
+                    }}
+                />
             </View>
             <Svg
                 style={{
@@ -125,7 +148,7 @@ const ScrollTypeA = () => {
                                     key={index}
                                     index={index}
                                     translateX={translateX}
-                                    onPress={(position) => {
+                                    onPress={(position: {x: number, y: number}) => {
                                         translateX.value = withSpring(-index * Post_WIDTH);
                                         setColorSelection({
                                             position,

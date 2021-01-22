@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, View, Text, Animated as RAnimated} from "react-native";
 import {StyleGuide} from "../components";
 import Animated, {
     Extrapolate,
@@ -9,6 +9,7 @@ import Animated, {
     useAnimatedStyle
 } from "react-native-reanimated";
 import {TapGestureHandler, TapGestureHandlerGestureEvent} from "react-native-gesture-handler";
+import Svg, {Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
 interface PostProps {
     color : {
@@ -18,6 +19,7 @@ interface PostProps {
     index : number;
     translateX? : Animated.SharedValue<number> | undefined;
     onPress?: (position: { x: number; y: number }) => void | undefined;
+    scaleValue?: any
 }
 
 export const Post_WIDTH = StyleGuide.deviceWidth / 3.3;
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
     }
 })
 
-const PostComponent = ({ color , index, translateX, onPress } : PostProps) => {
+const PostComponent = ({ color , index, translateX, onPress, scaleValue } : PostProps) => {
 
     const inputRange = [
         -Post_WIDTH * (index + 1),
@@ -73,17 +75,23 @@ const PostComponent = ({ color , index, translateX, onPress } : PostProps) => {
         return (
             <TapGestureHandler onGestureEvent={onGestureEvent}>
                 <Animated.View style={[styles.container,animateStyle]}>
-                        <View style={ [ styles.gradient , {  backgroundColor: color.start, justifyContent:'center',alignItems:'center' } ]} >
-                            <Text style={{ color: '#9428dd' }}>{color.end}</Text>
-                        </View>
+                    <View style={ [ styles.gradient , {  backgroundColor: color.start, justifyContent:'center',alignItems:'center' } ]} >
+                        <Text style={{ color: color.end }}>{color.end}</Text>
+                        <Text style={{ color: '#9428dd' }}>{'Tap Tap'}</Text>
+                    </View>
                 </Animated.View>
             </TapGestureHandler>
         )
     }else{
         return (
-            <View style={styles.container}>
+            <RAnimated.View style={[styles.container,{
+                flex:1,
+                transform : [
+                    {scale : scaleValue}
+                ]
+            }]}>
                 <View style={ [ styles.gradient , {  backgroundColor: color.start } ]} />
-            </View>
+            </RAnimated.View>
         )
     }
 };

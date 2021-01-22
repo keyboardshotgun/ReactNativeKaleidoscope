@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {View, Text, StyleSheet} from "react-native";
+import React, {useState} from "react";
+import {View, StyleSheet} from "react-native";
 import Animated, {
     Easing,
     useAnimatedGestureHandler,
@@ -9,6 +9,7 @@ import Animated, {
 import {clamp} from "../components/AnimatedHelpers";
 import {PanGestureHandler} from "react-native-gesture-handler";
 import StyleGuide from "../components/StyleGuide";
+import AnimatedText from "./AnimatedText";
 
 interface SimpleSlider{
     sliderHeight: number;
@@ -61,7 +62,7 @@ const SimpleSlider = (props:SimpleSlider) => {
     });
 
     const onGestureEvent = useAnimatedGestureHandler( {
-        onStart: (_event, ctx) => {
+        onStart: (_event, ctx: { offsetX : number} ) => {
             ctx.offsetX = translateX.value;
             volX.value = withSpring(1.2);
             volY.value = withSpring(1.2);
@@ -122,13 +123,18 @@ const SimpleSlider = (props:SimpleSlider) => {
         setTextV(toRatio);
     };
 
+    const stepText = useDerivedValue(() => {
+        return `${Math.round(((translateX.value - startX) / (endX-Math.round(boundX*0.1) - startX)) * 100)}`;  // pos to ratio
+    })
+
     return (
         <View style={sliderStyle.sliderBox}>
             <View style={[sliderStyle.slider, { opacity: 0.3 }]} />
-            <Animated.View style={[sliderStyle.slider, frontBarWidth]} />
+            <Animated.View style={[sliderStyle.slider, frontBarWidth]}/>
+            <Animated.Text style={{ position:'absolute', right : 15, top: 33, color: '#be38be', fontSize: 15}}>{textV}</Animated.Text>
             <PanGestureHandler {...{onGestureEvent, onHandlerStateChange}}>
                 <Animated.View style={[defaultAnimation,sliderStyle.pointer]}>
-                    <Text>{textV}</Text>
+                    <AnimatedText text={stepText}/>
                 </Animated.View>
             </PanGestureHandler>
         </View>
