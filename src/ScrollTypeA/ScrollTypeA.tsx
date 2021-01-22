@@ -66,14 +66,12 @@ const ScrollTypeA = () => {
         }
     })
 
-    useEffect(()=>{
-        console.log('scrollY : ', scrollX);
-    },[scrollX])
-
     return (
         <View style={styles.container}>
             <View style={styles.subContainer}>
+                <RAnimated.Text style={{position:'absolute', top: 10, left : 10 }}>{'FlatList'}</RAnimated.Text>
                 <RAnimated.FlatList
+                    contentContainerStyle={{height: StyleGuide.deviceHeight/2}}
                     data={[...StyleGuide.colors_data].reverse()}
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
@@ -91,14 +89,15 @@ const ScrollTypeA = () => {
                     keyExtractor={ (item) => '#'+(Math.random() * 89999999 + 100000)  }
                     renderItem={ ({item, index}) => {
                         const inputRange = [
+                            -1,
+                            -0.5,
                             0,
-                            0.5,
+                            Post_WIDTH * index,
                             Post_WIDTH * index+1,
-                            Post_WIDTH * index+2,
                         ]
                         const scaleValue = scrollX.interpolate({
                             inputRange,
-                            outputRange: [1, 1 , 0.5, 0.1]
+                            outputRange: [1, 0.7,  0.5 , 1 , 0.8]
                         })
                         return (
                             <PostComponent color={item}
@@ -139,6 +138,7 @@ const ScrollTypeA = () => {
             </Svg>
             <PanGestureHandler onGestureEvent={onGestureEvent}>
                 <Animated.View style={[styles.subContainer]}>
+                    <RAnimated.Text style={{position:'absolute', top: 0, left : 10, color: '#FFFFFF' }}>{'React Native Animated 2'}</RAnimated.Text>
                     <View style={styles.placeholder}/>
                     {
                         StyleGuide.colors_data.map( ( color : { start: string, end : string  } , index : number ) => {

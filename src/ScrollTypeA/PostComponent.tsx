@@ -85,12 +85,16 @@ const PostComponent = ({ color , index, translateX, onPress, scaleValue } : Post
     }else{
         return (
             <RAnimated.View style={[styles.container,{
-                flex:1,
+                borderWidth: 1,
+                borderColor: color.end,
                 transform : [
-                    {scale : scaleValue}
+                    {scale : scaleValue},
+                    {rotate: '90deg' }
                 ]
             }]}>
-                <View style={ [ styles.gradient , {  backgroundColor: color.start } ]} />
+                <View style={ [ styles.gradient , {  backgroundColor: color.start, justifyContent:'center',alignItems:'center' } ]}>
+                    <Text style={{ color: '#9428dd' }}>{color.end}</Text>
+                </View>
             </RAnimated.View>
         )
     }
