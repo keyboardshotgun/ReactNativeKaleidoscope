@@ -9,7 +9,6 @@ import Animated, {
     useAnimatedStyle
 } from "react-native-reanimated";
 import {TapGestureHandler, TapGestureHandlerGestureEvent} from "react-native-gesture-handler";
-import Svg, {Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
 interface PostProps {
     color : {
